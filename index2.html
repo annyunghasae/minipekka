@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>배틀로얄 게임</title>
+    <style>
+        #player {
+            width: 50px;
+            height: 50px;
+            background-color: red;
+            position: absolute;
+        }
+        .bullet {
+            width: 5px;
+            height: 5px;
+            background-color: black;
+            position: absolute;
+        }
+        .enemy {
+            width: 50px;
+            height: 50px;
+            background-color: blue;
+            position: absolute;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>배틀로얄 게임</h1>
+    <div id="player"></div>
+    <div id="enemy1" class="enemy" style="top: 100px; left: 200px;"></div>
+    <div id="enemy2" class="enemy" style="top: 200px; left: 300px;"></div>
+    <script>
+        const player = document.getElementById('player');
+        const enemies = document.querySelectorAll('.enemy');
+
+        let playerX = 0;
+        let playerY = 0;
+
+        document.addEventListener('keydown', movePlayer);
+        document.addEventListener('keydown', shootBullet);
+
+        function movePlayer(event) {
+            const key = event.key;
+            if (key === 'ArrowUp') {
+                playerY -= 10;
+            } else if (key === 'ArrowDown') {
+                playerY += 10;
+            } else if (key === 'ArrowLeft') {
+                playerX -= 10;
+            } else if (key === 'ArrowRight') {
+                playerX += 10;
+            }
+
+            // 플레이어 위치 업데이트
+            player.style.top = playerY + 'px';
+            player.style.left = playerX + 'px';
+        }
+
+        function shootBullet(event) {
+            if (event.key === ' ') {
+                const bullet = document.createElement('div');
+                bullet.className = 'bullet';
+                bullet.style.top = playerY + 'px';
+                bullet.style.left = playerX + 'px';
+                document.body.appendChild(bullet);
+
+                // 총알 움직이기
+                const bulletMoveInterval = setInterval(() => {
+                    const bulletTop = parseInt(bullet.style.top);
+                    bullet.style.top = (bulletTop - 5) + 'px';
+
+                    // 적과 충돌 검사
+                    enemies.forEach(enemy => {
+                        if (isColliding(bullet, enemy)) {
+                            enemy.remove(); // 적 제거
+                            bullet.remove(); // 총알 제거
+                        }
+                    });
+
+                    // 화면 벗어나면 총알 제거
+                    if (bulletTop < 0) {
+                        bullet.remove();
+                        clearInterval(bulletMoveInterval);
+                    }
+                }, 20);
+            }
+        }
+
+        // 충돌 검사 함수
+        function isColliding(element1, element2) {
+            const rect1 = element1.getBoundingClientRect();
+            const rect2 = element2.getBoundingClientRect();
+            return !(
+                rect1.top > rect2.bottom ||
+                rect1.bottom < rect2.top ||
+                rect1.left > rect2.right ||
+                rect1.right < rect2.left
+            );
+        }
+    </script>
+</body>
+
+</html>

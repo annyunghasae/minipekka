@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>숨겨진 그림 찾기 게임</title>
+    <style>
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            max-width: 500px;
+        }
+        .box {
+            width: 100px;
+            height: 100px;
+            background-color: lightgray;
+            margin: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 20px;
+        }
+        .bottom-right {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+        }
+    </style>
+</head>
+<body>
+   <h1>숨겨진 그림 찾기 게임</h1>
+   <div class="container" id="container">
+       <!-- Boxes will be generated here -->
+   </div>
+   <button class="bottom-right" onclick="goToIndex2()">지렁이게임 가기</button>
+
+   <script>
+       // 숨겨진 그림의 위치
+       const hiddenIndex = Math.floor(Math.random() * 16);
+
+       // 상자 생성
+       const container = document.getElementById('container');
+       for (let i = 0; i < 16; i++) {
+           const box = document.createElement('div');
+           box.classList.add('box');
+           box.textContent = '?';
+           box.addEventListener('click', () => revealPicture(i));
+           container.appendChild(box);
+       }
+
+       // 숨겨진 그림 찾기 함수
+       function revealPicture(index) {
+           const boxes = document.querySelectorAll('.box');
+           if (index === hiddenIndex) {
+               boxes[index].textContent = '🎉';
+               alert('축하합니다! 숨겨진 그림을 찾았습니다!');
+               // 게임을 재시작하려면 여기에 추가로 로직을 넣으세요.
+           } else {
+               boxes[index].textContent = '❌';
+           }
+       }
+
+       // Index2로 이동하는 함수
+       function goToIndex2() {
+           window.location.href = 'index2.html';
+       }
+   </script>
+</body>
+</html>
